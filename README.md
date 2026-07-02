@@ -10,7 +10,8 @@ watchdog to force failsafe values if packets stop arriving.
 
 # System Architecture
 
-{Block Design}
+<img width="548" height="191" alt="image" src="https://github.com/user-attachments/assets/e55c1cf1-b206-47cb-b9f2-087a54e51e2b" />
+
 
 Everything from the webcam to the FPGA output was designed and verified from
 scratch; the radio and drone are commercial hardware integrated into the chain.
