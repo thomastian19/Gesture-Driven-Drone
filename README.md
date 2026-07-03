@@ -103,15 +103,17 @@ The Python side (python/gesture_control.py,
 python/serial_output.py) handles tracking and
 mapping:
 
-
-Hand tracking — MediaPipe tracks two hands; the left controls throttle
+* Hand tracking — MediaPipe tracks two hands; the left controls throttle
 and yaw, the right controls pitch and roll, mapped from hand position in
 defined regions.
-Neutral deadzone — a center bubble for each hand snaps its channels to
+
+* Neutral deadzone — a center bubble for each hand snaps its channels to
 neutral, with throttle scaled from the midpoint upward only.
-Activation gate — the system holds safe neutral values until both hands
+
+* Activation gate — the system holds safe neutral values until both hands
 are deliberately centered together, so nothing is commanded while you're ready.
-Smoothing & failsafe — I used the Exponential Moving Average (EMA) formula to reduce jitter.
+
+* Smoothing & failsafe — I used the Exponential Moving Average (EMA) formula to reduce jitter.
 After several test runs and crashes I settled on α = 0.3.
 
 &nbsp; $SmoothedValue = α * ChannelValue + (1 - α) * PreviousSmoothedValue$
@@ -119,10 +121,17 @@ After several test runs and crashes I settled on α = 0.3.
 
 ## 📡 Radio and Drone Integration
 
-The FPGA's output drives a RadioMaster Pocket (EdgeTX) through its trainer
+One end of the 3.5 mm TRS cable went into the radio. I cut the other end, separated the wires, identified the ring matchings with
+a multimeter in continuity mode, and hooked it up to the FPGA with a small breadboard.
+
+The FPGA's output drives a RadioMaster Pocket through its the caple to it's trainer
 input, configured as a master trainer so the incoming channels drive the model.
-A physical switch toggles the trainer on/off, providing an instant manual
+A physical switch toggles the trainer on/off, providing an manual
 override. The Pocket transmits to a BetaFPV Air65 over ExpressLRS; Betaflight
-is configured with a CRSF receiver, an arm switch, and a hardware failsafe
-(motors drop on signal loss). Control directions and ranges were verified in the
-EdgeTX Channel Monitor and Betaflight Receiver tab before flight.
+is configured with a CRSF receiver and an arm switch. 
+
+
+<br>
+<img width="352" height="263" alt="image" src="https://github.com/user-attachments/assets/4c495723-afc9-4587-9086-cdacf6be7364" />
+
+
