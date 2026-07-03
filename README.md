@@ -26,10 +26,23 @@ I used an Cmod A7-35T (Xilinx Artix-7) board with all RTL written and verified i
 The laptop sends a fixed 34-byte packet: a 0xAA header, 16 channels ×
 2 bytes (little-endian, 11-bit values), and an XOR checksum.
 
-The parser (rtl/parser.v) is a small FSM that receives bytes
-from the UART, accumulates the checksum, and stages the channel data. Crucially,
-the staged channels are committed atomically — copied into the live
-registers only on the single cycle where the checksum validates:
+The uart reciever (rtl/uart_rx.v) decodes the serial rx line (8N1 at 115200 baud) into parallel bytes. A 4-state FSM (IDLE → FIRST → RECEIVE_DATA → LAST) detects the start bit, waits half a bit period to align to bit centers, then samples each of the 8 data bits mid-bit. It shifts them LSB-first into a byte. On a valid stop bit it outputs the assembled byte on data_out and pulses valid high for one cycle to signal a byte is ready. 
+
+The parser (rtl/parser.v) is a small FSM (WAIT -> BEGIN). BEGIN starts when the valid bit is recieved; then it receives bytes
+from the UART, accumulates the checksum, and stages the channel data.
+The staged channels are copied into the live
+registers only on the cycle the checksum validates: 
+
+```SystemVerilog
+if (byte_counter == 32 && checksum == data_byte) begin
+    for (i = 0; i < 16; i = i + 1)
+        live_register[i] <= staging_buf[i];
+end
+```
+
+
+This guarantees the output stage never reads a half-updated frame: either a
+whole valid packet lands, or the previous values are held.
 
 ## ✅ Verification
 
