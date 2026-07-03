@@ -107,8 +107,7 @@ https://github.com/user-attachments/assets/45296893-c20b-47cb-b9c6-d8038abad5e6
 
 
 
-The Python side (python/gesture_control.py,
-python/serial_output.py) handles tracking and
+The [Python](python) side handles tracking and
 mapping:
 
 * Hand tracking — MediaPipe tracks two hands; the left controls throttle
