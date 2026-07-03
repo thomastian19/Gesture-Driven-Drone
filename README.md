@@ -74,7 +74,7 @@ While the connection worked, it wasn't always stable and would lose connection o
 
 ## ✅ Verification
 
-**Staged Simulation** I wrote testbenches (tb/) with functional coverage to exercise each
+**Staged Simulation** I wrote [testbenches](rtl/tb) with functional coverage to exercise each
 stage: UART receive, packet parsing and checksum rejection, bit-packing, full frame generation, and watchdog assert/recover. Edge cases (corrupted
 packets, frame boundaries, failsafe timeout and recovery) were tested
 explicitly. This approach helped me catch Several bugs including FSM timing, an off-by-one in frame counting, and a
